@@ -1,0 +1,8 @@
+---
+applications:
+  - name: ColleagueCloud
+    path: build
+    buildpacks: [staticfile_buildpack]
+    stack: cflinuxfs3
+    memory: 200M
+    disk_quota: 200M
