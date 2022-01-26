@@ -1,12 +1,12 @@
 import logo from './logo.svg';
 import './App.css';
 import React, {useEffect, useState} from 'react';
-import Client from './Client'
+import Client from './FakeClient'
 import Cloud from "./Cloud";
 
 function App() {
     const blank = {
-        centerCDSID: "cshaugh1",
+        centerCDSID: "vwillot",
         centerId: -1,
         assignments: []
     }
@@ -20,21 +20,21 @@ function App() {
 
     const blankCloud = {}
 
-    const [assignmentData, setAssignmentData] = useState(blank);
+    const [querentAssignments, setQuerentAssignments] = useState(blank);
     const [cloud, setCloud] = useState(null)
     const spaceUuid = 'a3f32596-e17f-11ea-a9ee-005056836670'
 
     useEffect(() => {
         Client.getPeopleInSpace(spaceUuid).then((response) => {
-            const centerPerson = response.data.find((x) => x.cdsId = blank.centerCDSID)
-            const newAssignmentData = assignmentData;
+            const centerPerson = response.data.find((x) => x.customField1 = blank.centerCDSID)
+            const newAssignmentData = querentAssignments;
             newAssignmentData.centerId = centerPerson.id;
-            setAssignmentData(newAssignmentData);
+            setQuerentAssignments(newAssignmentData);
         })
-    }, [assignmentData.centerCDSID]);
+    }, [querentAssignments.centerCDSID]);
 
     useEffect(() => {
-        Client.getAssignmentsV2ForSpaceAndPerson(spaceUuid, assignmentData.centerId).then((response) => {
+        Client.getAssignmentsV2ForSpaceAndPerson(spaceUuid, querentAssignments.centerId).then((response) => {
             const newAssignments = [];
             response.data.forEach(datum => {
                 const newAssignment = blankAssignment;
@@ -43,14 +43,14 @@ function App() {
                 newAssignment.productId = datum.productId;
                 newAssignments.push(newAssignment);
             })
-            const newAssignmentData = assignmentData;
+            const newAssignmentData = querentAssignments;
             newAssignmentData.assignments = newAssignments;
-            setAssignmentData(newAssignmentData);
+            setQuerentAssignments(newAssignmentData);
         })
-    }, [assignmentData.centerId])
+    }, [querentAssignments.centerId])
 
     useEffect(() => {
-    }, [assignmentData.assignments])
+    }, [querentAssignments.assignments])
 
     if (cloud == null) {
         return (<div className="App">
